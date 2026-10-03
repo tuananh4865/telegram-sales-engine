@@ -5,6 +5,16 @@ Test-Harness Interactive Conversation Simulator for Hermes Telegram Sales Bot
 This script exercises the genuine ordering state machine and database storage 
 from bot.py without requiring active Telegram API credentials or tokens.
 
+Invokes genuine async handlers from bot.py:
+- start_command
+- handle_callback_navigation (catalog category & product detail)
+- start_buy_flow
+- handle_quantity_choice
+- handle_name_input
+- handle_phone_input
+- handle_address_input
+- handle_final_confirmation
+
 Generates:
 - Real-time terminal dialogue demonstration
 - demo/transcript.txt recording exact input/output sequence
@@ -13,109 +23,159 @@ Generates:
 
 import sys
 import os
+import asyncio
 from pathlib import Path
-from datetime import datetime
 
 # Add root directory to sys.path to import bot
 ROOT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT_DIR))
 
-from bot import PRODUCTS, normalize_phone, init_db, save_order
+from bot import (
+    start_command,
+    handle_callback_navigation,
+    start_buy_flow,
+    handle_quantity_choice,
+    handle_name_input,
+    handle_phone_input,
+    handle_address_input,
+    handle_final_confirmation,
+    PRODUCTS,
+    normalize_phone,
+    init_db
+)
 
-def main():
-    transcript_lines = []
-    
-    def log(line: str = ""):
-        print(line)
-        transcript_lines.append(line)
+transcript_lines = []
 
+def log(line: str = ""):
+    print(line)
+    transcript_lines.append(line)
+
+class MockUser:
+    def __init__(self, user_id=12345678, first_name="Khách Hàng Mẫu", username="demouser"):
+        self.id = user_id
+        self.first_name = first_name
+        self.username = username
+
+class MockMessage:
+    def __init__(self, text="", contact=None, from_user=None):
+        self.text = text
+        self.contact = contact
+        self.from_user = from_user or MockUser()
+
+    async def reply_text(self, text, reply_markup=None, parse_mode=None):
+        lines = text.strip().splitlines()
+        for idx, l in enumerate(lines):
+            prefix = "[14:20:00] [BOT]  <- " if idx == 0 else "                   "
+            log(f"{prefix}{l}")
+        return self
+
+    async def edit_text(self, text, reply_markup=None, parse_mode=None):
+        lines = text.strip().splitlines()
+        for idx, l in enumerate(lines):
+            prefix = "[14:20:00] [BOT]  <- " if idx == 0 else "                   "
+            log(f"{prefix}{l}")
+        return self
+
+class MockCallbackQuery:
+    def __init__(self, data, from_user=None):
+        self.data = data
+        self.from_user = from_user or MockUser()
+        self.message = MockMessage(from_user=self.from_user)
+
+    async def answer(self):
+        pass
+
+class MockUpdate:
+    def __init__(self, message=None, callback_query=None, effective_user=None):
+        self.message = message
+        self.callback_query = callback_query
+        self.effective_user = effective_user or (message.from_user if message else callback_query.from_user if callback_query else MockUser())
+
+class MockContext:
+    def __init__(self):
+        self.user_data = {}
+
+async def run_harness():
     log("=" * 74)
     log("  HERMES TELEGRAM SALES BOT — TEST-HARNESS CONVERSATION")
     log("  Notice: Test-harness conversation, no live Telegram")
     log("=" * 74)
     log()
 
+    init_db()
+    user = MockUser()
+    context = MockContext()
+
     # Step 1: User issues /start
     log("[14:20:01] [USER] -> /start")
-    log("[14:20:01] [BOT]  <- Xin chào! Chào mừng bạn đến với Hermes Sports Store 🏸")
-    log("                   Vui lòng chọn danh mục bạn quan tâm:")
+    up1 = MockUpdate(message=MockMessage(text="/start", from_user=user))
+    await start_command(up1, context)
     log("                   [ 🏸 Vợt Cầu Lông ]  [ 👟 Giày & Trang Phục ]")
     log("                   [ 🎒 Phụ Kiện      ]  [ 📦 Tra Cứu Đơn Hàng   ]")
     log()
 
-    # Step 2: User browses catalog and chooses P01
-    log("[14:20:08] [USER] -> Chọn '🏸 Vợt Cầu Lông' -> 'P01: Vợt Carbon Pro 4U'")
-    p = PRODUCTS["P01"]
-    log(f"[14:20:08] [BOT]  <- 🏸 {p['name']}")
-    log(f"                   Giá niêm yết: {p['price']:,} VNĐ".replace(",", "."))
-    log(f"                   Mô tả: {p['desc']}")
-    log(f"                   Quà tặng: {p['gift']}")
-    log("                   [ 🛒 Đặt Mua Ngay ]  [ 🔙 Quay Lại Danh Mục ]")
+    # Step 2: User browses catalog and chooses category
+    log("[14:20:08] [USER] -> Chọn '🏸 Vợt Cầu Lông'")
+    up2 = MockUpdate(callback_query=MockCallbackQuery("cat_Vợt Cầu Lông", from_user=user))
+    await handle_callback_navigation(up2, context)
     log()
 
-    # Step 3: Order Flow - Quantity
+    # Step 3: User views product detail: P01
+    log("[14:20:10] [USER] -> Chọn 'P01: Vợt Carbon Pro 4U'")
+    up3 = MockUpdate(callback_query=MockCallbackQuery("prod_P01", from_user=user))
+    await handle_callback_navigation(up3, context)
+    log()
+
+    # Step 4: User clicks buy: buy_P01
     log("[14:20:15] [USER] -> Nhấn [ 🛒 Đặt Mua Ngay ]")
-    log("[14:20:15] [BOT]  <- Bạn muốn đặt mua số lượng bao nhiêu cây? (Nhập số từ 1-10):")
-    log("[14:20:18] [USER] -> 1")
-    log("[14:20:18] [BOT]  <- Đã ghi nhận số lượng: 1 cây.")
-    log("                   Vui lòng nhập Họ và Tên người nhận hàng:")
+    up4 = MockUpdate(callback_query=MockCallbackQuery("buy_P01", from_user=user))
+    await start_buy_flow(up4, context)
     log()
 
-    # Step 4: Customer Name
-    log("[14:20:25] [USER] -> Khách Hàng Mẫu (Demo Customer)")
-    log("[14:20:25] [BOT]  <- Cảm ơn bạn. Vui lòng cung cấp Số điện thoại nhận hàng:")
-    log("                   (Hỗ trợ định dạng 0900... hoặc +84...)")
+    # Step 5: Quantity choice: qty_1
+    log("[14:20:18] [USER] -> Chọn số lượng: 1")
+    up5 = MockUpdate(callback_query=MockCallbackQuery("qty_1", from_user=user))
+    await handle_quantity_choice(up5, context)
     log()
 
-    # Step 5: Phone validation & normalization
+    # Step 6: Customer Name
+    customer_name = "Khách Hàng Mẫu"
+    log(f"[14:20:25] [USER] -> {customer_name}")
+    up6 = MockUpdate(message=MockMessage(text=customer_name, from_user=user))
+    await handle_name_input(up6, context)
+    log()
+
+    # Step 7: Phone validation & normalization
     raw_phone = "0900 000 000"
-    norm_phone = normalize_phone(raw_phone)
     log(f"[14:20:31] [USER] -> {raw_phone}")
-    log(f"[14:20:31] [BOT]  <- Số điện thoại hợp lệ: {norm_phone} (Đã chuẩn hóa chuẩn E.164)")
-    log("                   Vui lòng nhập Địa chỉ giao hàng chi tiết:")
+    up7 = MockUpdate(message=MockMessage(text=raw_phone, from_user=user))
+    await handle_phone_input(up7, context)
     log()
 
-    # Step 6: Delivery address
+    # Step 8: Delivery address
     address = "123 Đường Thử Nghiệm, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh"
     log(f"[14:20:40] [USER] -> {address}")
-    log("[14:20:40] [BOT]  <- THÔNG TIN ĐƠN HÀNG:")
-    log(f"                   - Sản phẩm: {p['name']} (x1)")
-    log(f"                   - Người nhận: Khách Hàng Mẫu")
-    log(f"                   - Số điện thoại: {norm_phone}")
-    log(f"                   - Địa chỉ: {address}")
-    log(f"                   - Tổng thanh toán: {p['price']:,} VNĐ (COD khi nhận hàng)".replace(",", "."))
-    log("                   [ ✅ Xác Nhận Đặt Hàng ]  [ ❌ Hủy Bỏ ]")
+    up8 = MockUpdate(message=MockMessage(text=address, from_user=user))
+    await handle_address_input(up8, context)
     log()
 
-    # Step 7: Order confirmation and database storage
+    # Step 9: Order confirmation and database storage
     log("[14:20:45] [USER] -> Nhấn [ ✅ Xác Nhận Đặt Hàng ]")
-    init_db()
-    order_data = {
-        "product_id": p["id"],
-        "product_name": p["name"],
-        "quantity": 1,
-        "total_price": p["price"],
-        "name": "Khách Hàng Mẫu",
-        "customer_name": "Khách Hàng Mẫu",
-        "phone": norm_phone,
-        "address": address,
-        "notes": "Harness demo test order",
-    }
-    order_id = save_order(order_data)
-    log(f"[14:20:45] [BOT]  <- 🎉 ĐẶT HÀNG THÀNH CÔNG! Mã đơn hàng: #{order_id}")
-    log("                   Đơn hàng đã được lưu trữ an toàn vào cơ sở dữ liệu SQLite.")
-    log("                   Nhân viên CSKH sẽ liên hệ xác nhận trong 15 phút!")
+    up9 = MockUpdate(callback_query=MockCallbackQuery("confirm_final_order", from_user=user))
+    await handle_final_confirmation(up9, context)
     log()
-    log("[14:20:45] [ADMIN ALERT] -> 🔔 [ĐƠN HÀNG MỚI] #" + order_id + " | Khách: Khách Hàng Mẫu (" + norm_phone + ") | Tiền: 390.000 VNĐ | Trạng thái: PENDING")
-    log()
+
     log("=" * 74)
-    log("  TEST-HARNESS EXECUTION COMPLETED (All bot handlers verified)")
+    log("  TEST-HARNESS EXECUTION COMPLETED (State Machine Handlers Executed)")
     log("=" * 74)
 
     # Save to demo/transcript.txt
     transcript_path = ROOT_DIR / "demo" / "transcript.txt"
     transcript_path.write_text("\n".join(transcript_lines) + "\n", encoding="utf-8")
     print(f"\nTranscript written successfully to: {transcript_path}")
+
+def main():
+    asyncio.run(run_harness())
 
 if __name__ == "__main__":
     main()

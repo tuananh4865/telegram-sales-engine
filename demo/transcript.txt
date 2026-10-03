@@ -4,48 +4,74 @@
 ==========================================================================
 
 [14:20:01] [USER] -> /start
-[14:20:01] [BOT]  <- Xin chào! Chào mừng bạn đến với Hermes Sports Store 🏸
-                   Vui lòng chọn danh mục bạn quan tâm:
+[14:20:00] [BOT]  <- 👋 Chào bạn *Khách Hàng Mẫu*!
+                   
+                   Chào mừng bạn đến với *Cửa Hàng Thể Thao Tự Động Hermes* 🏸⚡
+                   Chúng tôi chuyên cung cấp dụng cụ & phụ kiện cầu lông chính hãng với mức giá ưu đãi nhất.
+                   
+                   👉 *Vui lòng chọn danh mục bạn quan tâm dưới đây:*
                    [ 🏸 Vợt Cầu Lông ]  [ 👟 Giày & Trang Phục ]
                    [ 🎒 Phụ Kiện      ]  [ 📦 Tra Cứu Đơn Hàng   ]
 
-[14:20:08] [USER] -> Chọn '🏸 Vợt Cầu Lông' -> 'P01: Vợt Carbon Pro 4U'
-[14:20:08] [BOT]  <- 🏸 Vợt Carbon Pro 4U Siêu Nhẹ (82g)
-                   Giá niêm yết: 390.000 VNĐ
-                   Mô tả: Thân carbon 24T triệt tiêu rung 95%, trợ lực cổ tay cực tốt, đập cầu cắm sân.
-                   Quà tặng: Tặng cước BG65 căng sẵn 10.5kg + 2 quấn cán
-                   [ 🛒 Đặt Mua Ngay ]  [ 🔙 Quay Lại Danh Mục ]
+[14:20:08] [USER] -> Chọn '🏸 Vợt Cầu Lông'
+[14:20:00] [BOT]  <- 🏷️ **DANH SÁCH: Vợt Cầu Lông**
+                   Bấm vào sản phẩm để xem chi tiết và ưu đãi:
+
+[14:20:10] [USER] -> Chọn 'P01: Vợt Carbon Pro 4U'
+[14:20:00] [BOT]  <- ✨ **Vợt Carbon Pro 4U Siêu Nhẹ (82g)**
+                   ━━━━━━━━━━━━━━━━━━
+                   💰 **Giá ưu đãi**: `390,000 VNĐ`
+                   📝 **Mô tả**: Thân carbon 24T triệt tiêu rung 95%, trợ lực cổ tay cực tốt, đập cầu cắm sân.
+                   🎁 **Quà tặng kèm**: Tặng cước BG65 căng sẵn 10.5kg + 2 quấn cán
+                   🚚 **Vận chuyển**: Giao hàng toàn quốc - Kiểm tra hàng trước khi thanh toán!
+                   ━━━━━━━━━━━━━━━━━━
 
 [14:20:15] [USER] -> Nhấn [ 🛒 Đặt Mua Ngay ]
-[14:20:15] [BOT]  <- Bạn muốn đặt mua số lượng bao nhiêu cây? (Nhập số từ 1-10):
-[14:20:18] [USER] -> 1
-[14:20:18] [BOT]  <- Đã ghi nhận số lượng: 1 cây.
-                   Vui lòng nhập Họ và Tên người nhận hàng:
+[14:20:00] [BOT]  <- 🛒 Bạn đang đặt mua: **Vợt Carbon Pro 4U Siêu Nhẹ (82g)**
+                   Đơn giá: `390,000 VNĐ`
+                   
+                   👉 **Vui lòng chọn số lượng bạn muốn đặt:**
 
-[14:20:25] [USER] -> Khách Hàng Mẫu (Demo Customer)
-[14:20:25] [BOT]  <- Cảm ơn bạn. Vui lòng cung cấp Số điện thoại nhận hàng:
-                   (Hỗ trợ định dạng 0900... hoặc +84...)
+[14:20:18] [USER] -> Chọn số lượng: 1
+[14:20:00] [BOT]  <- ✅ Số lượng: *1* (Tạm tính: `390,000 VNĐ`)
+                   
+                   👉 *Bước 1/3: Vui lòng nhập Tên người nhận hàng:*
+
+[14:20:25] [USER] -> Khách Hàng Mẫu
+[14:20:00] [BOT]  <- Cảm ơn bạn *Khách Hàng Mẫu*!
+                   
+                   👉 *Bước 2/3: Cung cấp Số điện thoại nhận hàng:*
+                   (Bấm nút bên dưới để chia sẻ nhanh hoặc tự gõ số điện thoại)
 
 [14:20:31] [USER] -> 0900 000 000
-[14:20:31] [BOT]  <- Số điện thoại hợp lệ: 0900000000 (Đã chuẩn hóa chuẩn E.164)
-                   Vui lòng nhập Địa chỉ giao hàng chi tiết:
+[14:20:00] [BOT]  <- ✅ Đã nhận SĐT: `0900000000`
+                   
+                   👉 *Bước 3/3: Vui lòng nhập Địa chỉ giao hàng chi tiết:*
+                   (Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố)
 
 [14:20:40] [USER] -> 123 Đường Thử Nghiệm, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh
-[14:20:40] [BOT]  <- THÔNG TIN ĐƠN HÀNG:
-                   - Sản phẩm: Vợt Carbon Pro 4U Siêu Nhẹ (82g) (x1)
-                   - Người nhận: Khách Hàng Mẫu
-                   - Số điện thoại: 0900000000
-                   - Địa chỉ: 123 Đường Thử Nghiệm, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh
-                   - Tổng thanh toán: 390.000 VNĐ (COD khi nhận hàng)
-                   [ ✅ Xác Nhận Đặt Hàng ]  [ ❌ Hủy Bỏ ]
+[14:20:00] [BOT]  <- 📋 *XÁC NHẬN THÔNG TIN ĐƠN HÀNG*
+                   ━━━━━━━━━━━━━━━━━━━━━━
+                   📦 *Sản phẩm*: Vợt Carbon Pro 4U Siêu Nhẹ (82g)
+                   🔢 *Số lượng*: 1
+                   💵 *Tổng tiền*: `390,000 VNĐ`
+                   👤 *Người nhận*: Khách Hàng Mẫu
+                   📞 *Số điện thoại*: `0900000000`
+                   📍 *Địa chỉ*: 123 Đường Thử Nghiệm, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh
+                   🚚 *Hình thức*: Nhận hàng kiểm tra thanh toán (COD)
+                   ━━━━━━━━━━━━━━━━━━━━━━
+                   Bạn có đồng ý đặt đơn hàng này không?
 
 [14:20:45] [USER] -> Nhấn [ ✅ Xác Nhận Đặt Hàng ]
-[14:20:45] [BOT]  <- 🎉 ĐẶT HÀNG THÀNH CÔNG! Mã đơn hàng: #ORD261003145213_4672
-                   Đơn hàng đã được lưu trữ an toàn vào cơ sở dữ liệu SQLite.
-                   Nhân viên CSKH sẽ liên hệ xác nhận trong 15 phút!
-
-[14:20:45] [ADMIN ALERT] -> 🔔 [ĐƠN HÀNG MỚI] #ORD261003145213_4672 | Khách: Khách Hàng Mẫu (0900000000) | Tiền: 390.000 VNĐ | Trạng thái: PENDING
+[14:20:00] [BOT]  <- 🎉 *ĐẶT HÀNG THÀNH CÔNG!* 🎉
+                   
+                   Mã đơn hàng: `ORD261003150648_9714`
+                   Sản phẩm: *Vợt Carbon Pro 4U Siêu Nhẹ (82g)* (x1)
+                   Tổng thanh toán: `390,000 VNĐ` (Thanh toán khi nhận hàng)
+                   
+                   📞 Chuyên viên tư vấn sẽ liên hệ với bạn trong ít phút để xác nhận và đóng gói gửi hàng.
+                   Cảm ơn bạn đã tin tưởng ủng hộ shop! Chúc bạn một ngày tốt lành! ❤️
 
 ==========================================================================
-  TEST-HARNESS EXECUTION COMPLETED (All bot handlers verified)
+  TEST-HARNESS EXECUTION COMPLETED (State Machine Handlers Executed)
 ==========================================================================
