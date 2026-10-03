@@ -42,7 +42,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 # 3. Run automated tests (offline, no bot token required)
-pytest tests/ -v
+python -m pytest tests/ -v
 
 # 4. Optional: Run the bot live (requires Telegram Bot Token)
 export TELEGRAM_BOT_TOKEN="your_token_from_botfather"
